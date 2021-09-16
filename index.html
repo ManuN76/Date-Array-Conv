@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Glide Yes-Code</title>
+</head>
+<div>
+  <span id="result"></span>
+</div>
+<script src='glidedate.js'></script>'
+<script src="function.js"></script>
+<script src="driver.js"></script>
+
+
+<script>
+  // TEST DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  testDebug();
+ // setInterval(testDebug, 10000);
+
+  async function testDebug() {
+  let array = { type: "date-time", value: ["16/09/2021","4/1/2021","10/10/2021"] };
+  let arrayformat = { type: "string", value : "short"};
+  let result = await window.function(array , arrayformat);
+  document.getElementById("result").innerHTML = result;
+
+  }
+</script>
+</body>
+
+</html>

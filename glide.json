@@ -1,0 +1,21 @@
+{
+  "kind": "column",
+  "name": "DateTestArray",
+  "description": "Date Test Array.",
+  "author": "Manu",
+  "params": [
+    {
+      "name": "array",
+      "displayName": "Array",
+      "type": { "kind": "array", "items": "string" }
+    },  
+    {
+      "name": "arrayformat",
+      "displayName": "Array, Date Format (short, medium, long)",
+      "type": "string"
+    }
+  ],
+   "result": {
+    "type": { "kind": "array", "items": "string" }
+  }
+}
