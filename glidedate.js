@@ -120,7 +120,10 @@ function date2Glide(dt, dateformat) {
   const re = new RegExp(
     /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
   );
-  if (re.exec(dt)) return new Date(dt);
+  if (re.exec(dt)) {
+    let iso = new Date(dt);
+    return new Date(iso.getTime() + iso.getTimezoneOffset() * 60000);
+  }
 
   // Local Date
   let num = defDate[dateformat.toLowerCase()];
