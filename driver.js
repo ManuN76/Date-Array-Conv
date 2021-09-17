@@ -1,3 +1,4 @@
+// conv with glidedate
 function convert(x) {
   if (x instanceof Date) {
     if (isValidDate(x))
