@@ -22,7 +22,7 @@
   let array = { type: "date-time", value: ["16/09/2021","4/1/2021","10/10/2021"] };
   let arrayformat = { type: "string", value : "short"};
 
-  let lang = { type: "string", value: "en" };
+  let lang = { type: "string", value: "fr" };
   let weekday = { type: "string", value: "long" };
   let year = { type: "string", value: "numeric" };
   let month = { type: "string", value: "long" };
@@ -35,7 +35,7 @@
 
   let result = await window.function(array , arrayformat, lang, weekday, year, month, day, hour, minute, second, timeZoneName, era);
 
-  document.getElementById("result").innerHTML = result;
+  document.getElementById("result").innerHTML = convert(result);
 
   }
 </script>

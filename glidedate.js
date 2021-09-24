@@ -52,64 +52,88 @@ function isValidDate(d) {
 
 // Conversion string Date or date by glide column to JS Date
 function glide2Date(dt, dateformat) {
-  let num = defDate[dateformat.toLowerCase()];
-
-  let ne = dt.split(defDate.format[num].separator);
-
-  let dtFormat = "";
-  if (dateformat != "time") {
-    // Month Selection : Literal or Numeric
-    let mth;
-
-    if (defDate.format[num].allformat.month == "numeric") {
-      mth = parseInt(ne[defDate.format[num].monthIndex]);
-    } else {
-      mth =
-        defDate.monthLiteral.indexOf(ne[defDate.format[num].monthIndex]) + 1;
-    }
-
-    // Format mm/dd/yyyy
-    dtFormat =
-      mth +
-      "/" +
-      ne[defDate.format[num].dayIndex] +
-      "/" +
-      ne[defDate.format[num].yearIndex];
+  // Detect Array & conversion
+  if (Array.isArray(dt)) {
+    let ret = dt.map(function (item) {
+      return glide2Date(item, dateformat);
+    });
+    return ret;
   } else {
-    // For Time Format, Date is today !!!
-    dtFormat = new Date().toDateString();
+    return conv(dt, dateformat);
   }
 
-  // Add Time
-  if (
-    defDate.format[num].hourIndex == -1 ||
-    defDate.format[num].hourIndex > ne.length - 1
-  ) {
-    dtFormat += ", 00:00:00";
-    glideDateOnly = 1;
-  } else {
-    glideDateOnly = 0;
-    if (defDate.format[num].hourIndex > -1) {
-      dtFormat += ", " + ne[defDate.format[num].hourIndex];
+  // conversion
+  function conv(dt, dateformaat) {
+    dt = dt.trim();
+
+    // Test Date is ISO
+    const re = new RegExp(
+      /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
+    );
+    if (re.exec(dt)) {
+      let iso = new Date(dt);
+      return new Date(iso.getTime() + iso.getTimezoneOffset() * 60000);
     }
-    if (defDate.format[num].minuteIndex > -1) {
-      dtFormat += ":" + ne[defDate.format[num].minuteIndex];
-    }
-    if (defDate.format[num].secondIndex > -1) {
-      if (Number.isInteger(parseInt(ne[defDate.format[num].secondIndex]))) {
-        dtFormat += ":" + ne[defDate.format[num].secondIndex];
+
+    let num = defDate[dateformat.toLowerCase()];
+
+    let ne = dt.split(defDate.format[num].separator);
+
+    let dtFormat = "";
+    if (dateformat != "time") {
+      // Month Selection : Literal or Numeric
+      let mth;
+
+      if (defDate.format[num].allformat.month == "numeric") {
+        mth = parseInt(ne[defDate.format[num].monthIndex]);
       } else {
-        dtFormat += ":00";
+        mth =
+          defDate.monthLiteral.indexOf(ne[defDate.format[num].monthIndex]) + 1;
+      }
+
+      // Format mm/dd/yyyy
+      dtFormat =
+        mth +
+        "/" +
+        ne[defDate.format[num].dayIndex] +
+        "/" +
+        ne[defDate.format[num].yearIndex];
+    } else {
+      // For Time Format, Date is today !!!
+      dtFormat = new Date().toDateString();
+    }
+
+    // Add Time
+    if (
+      defDate.format[num].hourIndex == -1 ||
+      defDate.format[num].hourIndex > ne.length - 1
+    ) {
+      dtFormat += ", 00:00:00";
+      glideDateOnly = 1;
+    } else {
+      glideDateOnly = 0;
+      if (defDate.format[num].hourIndex > -1) {
+        dtFormat += ", " + ne[defDate.format[num].hourIndex];
+      }
+      if (defDate.format[num].minuteIndex > -1) {
+        dtFormat += ":" + ne[defDate.format[num].minuteIndex];
+      }
+      if (defDate.format[num].secondIndex > -1) {
+        if (Number.isInteger(parseInt(ne[defDate.format[num].secondIndex]))) {
+          dtFormat += ":" + ne[defDate.format[num].secondIndex];
+        } else {
+          dtFormat += ":00";
+        }
+      }
+      if (defDate.format[num].dayperiodIndex > -1) {
+        if (defDate.format[num].dayperiodIndex > ne.length - 1)
+          defDate.format[num].dayperiodIndex -= 1;
+
+        dtFormat += " " + ne[defDate.format[num].dayperiodIndex];
       }
     }
-    if (defDate.format[num].dayperiodIndex > -1) {
-      if (defDate.format[num].dayperiodIndex > ne.length - 1)
-        defDate.format[num].dayperiodIndex -= 1;
-
-      dtFormat += " " + ne[defDate.format[num].dayperiodIndex];
-    }
+    return new Date(dtFormat);
   }
-  return new Date(dtFormat);
 }
 
 // Conversion JS Date to Glide
